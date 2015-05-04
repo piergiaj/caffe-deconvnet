@@ -1,0 +1,168 @@
+name: "CaffeNet"
+input: "switches5"
+input_dim: 10
+input_dim: 256
+input_dim: 6
+input_dim: 6
+input: "switches2"
+input_dim: 10
+input_dim: 256
+input_dim: 13
+input_dim: 13
+input: "switches1"
+input_dim: 10
+input_dim: 96
+input_dim: 27
+input_dim: 27
+input: "pooled"
+input_dim: 10
+input_dim: 256
+input_dim: 6
+input_dim: 6
+
+layer {
+      name: "cat1"
+      type: "Concat"
+      bottom: "switches5"
+      bottom: "pooled"
+      top: "cat1"
+      concat_param {
+          axis: 0
+      }
+}
+layer {
+  name: "pool5"
+  type: "InvPooling"
+  bottom: "cat1"
+  top: "ipooled5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv5"
+  type: "Deconvolution"
+  bottom: "ipooled5"
+  top: "conv5"
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+  }
+}
+layer {
+  name: "conv4"
+  type: "Deconvolution"
+  bottom: "conv5"
+  top: "conv4"
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+  }
+}
+
+layer {
+  name: "conv3"
+  type: "Deconvolution"
+  bottom: "conv4"
+  top: "conv3"
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+  }
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "conv3"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+      name: "cat2"
+      type: "Concat"
+      bottom: "switches2"
+      bottom: "norm2"
+      top: "cat2"
+      concat_param {
+          axis: 0
+      }
+}
+
+layer {
+  name: "pool2"
+  type: "InvPooling"
+  bottom: "cat2"
+  top: "poolswitches2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Deconvolution"
+  bottom: "poolswitches2"
+  top: "conv2"
+  convolution_param {
+    num_output: 96
+    pad: 2
+    kernel_size: 5
+    group: 2
+  }
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "conv2"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+
+layer {
+      name: "cat3"
+      type: "Concat"
+      bottom: "switches1"
+      bottom: "norm1"
+      top: "cat3"
+      concat_param {
+          axis: 0
+      }
+}
+layer {
+  name: "pool1"
+  type: "InvPooling"
+  bottom: "cat3"
+  top: "poolswitches1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv1"
+  type: "Deconvolution"
+  bottom: "poolswitches1"
+  top: "conv1"
+  convolution_param {
+    num_output: 3
+    kernel_size: 11
+    stride: 4
+  }
+}
