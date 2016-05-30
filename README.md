@@ -9,4 +9,4 @@ Replace the caffe files with the included in the caffe folder. Most of the files
 
 ## Usage
 
-There is a python example on using a deconvolutional network with AlexNet. This shows the use of the pooling switches layers and the slicing layer to separate the switches from the pooled data. The invdepoly reconstructs the network using the inv_pooling and deconvolution layers. The python file runs AlexNet with an image, gathers the swtiches and reconstructs the input.
+There is a python example on using a deconvolutional network with AlexNet. This shows the use of the pooling switches layers and the slicing layer to separate the switches from the pooled data. The invdepoly reconstructs the network using the inv_pooling and deconvolution layers. The python file runs AlexNet with an image, gathers the switches and reconstructs the input.
